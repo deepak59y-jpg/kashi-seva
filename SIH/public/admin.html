@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Temple Admin Panel</title>
+  <link rel="stylesheet" href="admin-style.css">
+ <!-- Firebase compat (works with firebase.initializeApp(), firebase.auth() etc.) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+
+</head>
+<body>
+  <!-- Paste this into admin.html (HTML body) where you want login -->
+<div id="admin-login" style="margin-bottom:12px;">
+  <input id="adminEmail" placeholder="admin email" style="padding:8px;width:220px">
+  <input id="adminPass" type="password" placeholder="password" style="padding:8px;width:220px">
+  <button id="adminSignIn">Sign in</button>
+  <button id="adminSignOut" style="display:none">Sign out</button>
+  <div id="adminMsg" style="color:#c00;margin-top:6px"></div>
+</div>
+
+  <div class="container">
+    <h2>Temple Admin Panel</h2>
+
+    <!-- Block Status -->
+    <h3>Block Status</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Queue Type</th>
+          <th>Block</th>
+          <th>People Count</th>
+          <th>Max Capacity</th>
+        </tr>
+      </thead>
+      <tbody id="blocksTable"></tbody>
+    </table>
+
+    <!-- Registrations -->
+    <h3>Registrations</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Phone</th>
+          <th>Queue</th>
+          <th>Reason</th>
+          <th>Family Members</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="registrationsTable"></tbody>
+    </table>
+  </div>
+
+  <script>
+    // Paste into a <script> after firebase scripts or run in Console
+document.getElementById('adminSignIn').onclick = async () => {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('adminPass').value;
+  const msg = document.getElementById('adminMsg');
+  msg.textContent = '';
+  if (!email || !pass) { msg.textContent = 'Enter email and password'; return; }
+  try {
+    await firebase.auth().signInWithEmailAndPassword(email, pass);
+    // force token refresh to pick up custom claims
+    await firebase.auth().currentUser.getIdToken(true);
+    msg.style.color = 'green';
+    msg.textContent = 'Signed in and token refreshed';
+    document.getElementById('adminSignOut').style.display = '';
+    document.getElementById('adminSignIn').style.display = 'none';
+  } catch (err) {
+    console.error('signIn error', err);
+    msg.style.color = '#c00';
+    msg.textContent = 'Sign-in error: ' + (err && err.message ? err.message : err);
+  }
+};
+
+document.getElementById('adminSignOut').onclick = async () => {
+  await firebase.auth().signOut();
+  document.getElementById('adminMsg').textContent = 'Signed out';
+  document.getElementById('adminSignOut').style.display = 'none';
+  document.getElementById('adminSignIn').style.display = '';
+};
+
+  </script>
+
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Temple Crowd Management</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:,"> <!-- prevents favicon 404 -->
+
+  <!-- Firebase compat (works with namespaced API) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <!-- add QR lib in head (place after Firebase scripts but before app.js) -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+
+
+</head>
+<body>
+  <div class="container">
+    <h2>Temple Registration</h2>
+
+    <!-- Phone Input -->
+    <label for="phone">Phone Number:</label>
+    <input type="text" id="phone" placeholder="+91XXXXXXXXXX" autocomplete="tel" />
+
+    <div id="recaptcha-container"></div>
+    <!-- use type="button" to avoid accidental form submits -->
+    <button type="button" onclick="sendOTP()">Send OTP</button>
+
+    <!-- OTP Input -->
+    <div id="otp-section" style="display:none;">
+      <label for="otp">Enter OTP:</label>
+      <input type="text" id="otp" inputmode="numeric" />
+      <button type="button" onclick="verifyOTP()">Verify OTP</button>
+    </div>
+
+    <!-- Queue Options (shown after verification) -->
+    <div id="queue-section" style="display:none;">
+      <h3>Select Queue</h3>
+      <select id="queueType" onchange="togglePriorityOptions()">
+        <option value="normal">Normal Queue</option>
+        <option value="priority">Priority Queue</option>
+      </select>
+
+      <!-- Priority Reasons -->
+      <div id="priority-options" style="display:none;">
+        <label for="priorityReason">Priority Reason:</label>
+        <select id="priorityReason">
+          <option value="medical">Medical</option>
+          <option value="vip">VIP</option>
+        </select>
+      </div>
+
+      <!-- Family Size -->
+      <label for="familyMembers">Number of People:</label>
+      <input type="number" id="familyMembers" min="1" value="1" />
+
+      <!-- Register -->
+      <button type="button" onclick="registerUser()">Register</button>
+    </div>
+    <!-- After the queue-section div -->
+<div id="result-section" style="display:none;margin-top:18px;" class="card">
+  <h3>Registration Complete</h3>
+  <p id="blockAllocated" style="font-weight:700"></p>
+  <div id="qrContainer" style="width:260px;height:260px;padding:8px;background:#fff;border-radius:8px;"></div>
+  <p style="margin-top:8px;" class="small">Save this QR for check-in or volunteer scanning.</p>
+</div>
+
+
+    <!-- Status messages (required by app.js) -->
+    <p id="status" aria-live="polite"></p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
