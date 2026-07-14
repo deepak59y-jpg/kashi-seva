@@ -23,4 +23,4 @@ both devotees and temple administration.
 4. Booking confirmed — reducing walk-in crowd load
 
 ## Status
-Built as a hackathon prototype for SIH. [Add: did it place / reach a round? If yes, mention it here — that's a credibility signal]
+Built as a hackathon prototype for SIH.
